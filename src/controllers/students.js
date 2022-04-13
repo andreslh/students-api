@@ -19,7 +19,43 @@ const post = async (req, res) => {
   }
 };
 
+const put = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const student = await Student.findOne({ where: { id } })
+      .then(function(student) {
+        if(student)
+          return student.update({ ...req.body });
+      });
+
+    if (student) {
+      return res.sendStatus(200);
+    }
+    throw new Error('Student not found');
+  } catch (error) {
+    // TODO: handle errors properly
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const remove = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Student.destroy({ where: { id } });
+    if (deleted) {
+      return res.status(204).send();
+    }
+    throw new Error('Student not found');
+  } catch (error) {
+    // TODO: handle errors properly
+    return res.status(500).send(error.message);
+  }
+};
+
 module.exports = {
   get,
-  post
+  post,
+  put,
+  remove
 };
