@@ -41,12 +41,11 @@ const put = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deleted = await Student.destroy({ where: { id } });
+    const deleted = await Student.destroy({ where: { id: req.body.ids } });
     if (deleted) {
       return res.status(204).send();
     }
-    throw new Error('Student not found');
+    throw new Error('Student/s not found');
   } catch (error) {
     // TODO: handle errors properly
     return res.status(500).send(error.message);
