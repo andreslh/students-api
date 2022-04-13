@@ -1,4 +1,14 @@
+const fs = require('fs');
+let path = require('path');
 const { Student } = require('../models');
+
+const AVATAR_PATH = '../../public/img/students';
+
+const deleteOldAvatar = (avatar) => {
+  if (avatar) {
+    fs.unlinkSync(path.join(__dirname, `${AVATAR_PATH}/${avatar}`));
+  }
+}
 
 const get = async (req, res) => {
   try {
@@ -11,7 +21,7 @@ const get = async (req, res) => {
 
 const post = async (req, res) => {
   try {
-    const student = await Student.create(req.body);
+    const student = await Student.create({ ...req.body, avatar: req.file.filename });
     return res.status(201).json({ student });
   } catch (error) {
     // TODO: handle errors properly
@@ -25,8 +35,12 @@ const put = async (req, res) => {
 
     const student = await Student.findOne({ where: { id } })
       .then(function(student) {
-        if(student)
-          return student.update({ ...req.body });
+        if(student) {
+          if (req.file) {
+            deleteOldAvatar(student.get({ plain: true }).avatar);
+          }
+          return student.update({ ...req.body, avatar: req.file.filename });
+        }
       });
 
     if (student) {
@@ -41,9 +55,14 @@ const put = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const deleted = await Student.destroy({ where: { id: req.body.ids } });
-    if (deleted) {
-      return res.status(204).send();
+    const students = await Student.findAll({ where: { id: req.body.ids } });
+    
+    if (students) {
+      const deletedStudents = await Student.destroy({ where: { id: req.body.ids } });
+      if (deletedStudents) {
+        students.forEach((student) => deleteOldAvatar(student.get({ plain: true }).avatar));
+        return res.status(204).send();
+      }
     }
     throw new Error('Student/s not found');
   } catch (error) {

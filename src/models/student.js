@@ -25,6 +25,10 @@ module.exports = (sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      avatar: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       license: {
         type: Sequelize.ENUM('licensed', 'not licensed'),
         allowNull: false,

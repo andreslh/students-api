@@ -28,6 +28,10 @@ module.exports = {
         type: Sequelize.ENUM('licensed', 'not licensed'),
         allowNull: false,
       },
+      avatar: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
