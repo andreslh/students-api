@@ -58,10 +58,11 @@ const put = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const students = await Student.findAll({ where: { id: req.body.ids } });
+    const ids = JSON.parse(req.query.ids);
+    const students = await Student.findAll({ where: { id: ids } });
     
     if (students) {
-      const deletedStudents = await Student.destroy({ where: { id: req.body.ids } });
+      const deletedStudents = await Student.destroy({ where: { id: ids } });
       if (deletedStudents) {
         students.forEach((student) => deleteOldAvatar(student.get({ plain: true }).avatar));
         return res.status(204).send();
