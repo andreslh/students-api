@@ -15,6 +15,7 @@ const sequelize = new Sequelize(
 
 const models = [
 	require('./student.js'),
+	require('./filter.js'),
 ];
   
 models.forEach((modelFunction) => {
