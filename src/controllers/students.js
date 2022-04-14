@@ -39,12 +39,15 @@ const put = async (req, res) => {
           if (req.file) {
             deleteOldAvatar(student.get({ plain: true }).avatar);
           }
-          return student.update({ ...req.body, avatar: req.file.filename });
+          return student.update({
+            ...req.body,
+            ...(req.file && {avatar: req.file.filename})
+          });
         }
       });
 
     if (student) {
-      return res.sendStatus(200);
+      return res.status(200).json({ student });
     }
     throw new Error('Student not found');
   } catch (error) {
