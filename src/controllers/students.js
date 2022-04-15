@@ -2,7 +2,7 @@ const fs = require('fs');
 let path = require('path');
 const { Student } = require('../models');
 
-const AVATAR_PATH = '../../public/img/students';
+const AVATAR_PATH = '../../public/images/students';
 
 const deleteOldAvatar = (avatar) => {
   if (avatar) {
