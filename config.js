@@ -14,6 +14,7 @@ switch (env) {
     config.host = process.env.HOST_TEST;
     config.dialect = process.env.DIALECT_TEST;
     break;
+  // any other environment should have its case here
   default: // development
     config.username = process.env.USERNAME_DEV;
     config.password = process.env.PASSWORD_DEV;
